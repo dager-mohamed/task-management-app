@@ -9,4 +9,7 @@ const index_1 = __importDefault(require("./tasks/index"));
 const router = (0, express_1.Router)();
 router.use('/user', user_1.default);
 router.use('/task', index_1.default);
+router.get('/', (req, res) => {
+    res.status(200).send("it works!");
+});
 exports.default = router;
