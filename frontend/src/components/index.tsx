@@ -1,2 +1,5 @@
 export * from './Login'
 export * from './Signup'
+export * from './Tasks'
+export * from './Sidebar'
+export * from './Dashboard'

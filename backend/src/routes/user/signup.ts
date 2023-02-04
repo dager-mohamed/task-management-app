@@ -36,6 +36,7 @@ router.post("/", async (req, res) => {
           email,
           lastName,
           firstName,
+          password
         },
         process.env.JWT_SECRET
       );

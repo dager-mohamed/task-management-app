@@ -4,11 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const login_1 = __importDefault(require("./login"));
-const signup_1 = __importDefault(require("./signup"));
+const add_1 = __importDefault(require("./add"));
+const delete_1 = __importDefault(require("./delete"));
+const edit_1 = __importDefault(require("./edit"));
 const info_1 = __importDefault(require("./info"));
 const router = (0, express_1.Router)();
-router.use('/login', login_1.default);
-router.use('/signup', signup_1.default);
-router.use('/info', info_1.default);
+router.use("/edit", edit_1.default);
+router.use("/add", add_1.default);
+router.use("/delete", delete_1.default);
+router.use("/info", info_1.default);
 exports.default = router;

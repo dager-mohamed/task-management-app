@@ -44,6 +44,7 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             email,
             lastName,
             firstName,
+            password
         }, process.env.JWT_SECRET);
         return res
             .status(http_status_codes_1.StatusCodes.ACCEPTED)

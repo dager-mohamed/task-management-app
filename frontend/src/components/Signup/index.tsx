@@ -1,35 +1,53 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from 'axios'
+import axios from "axios";
 import { RespBackend } from "../../utils/constants";
+import { useNavigate } from "react-router-dom";
+import { getUser } from "../../utils/api";
 
 export function Signup() {
+  const navigate = useNavigate();
   const [info, setInfo] = useState({
     emaiL: "",
     password: "",
     firstName: "",
     lastName: "",
   });
-  const [error, setError] = useState('')
-   function postSignup(){
-    setError('')
-    if(!info.emaiL || !info.password || !info.firstName || !info.lastName) return setError('there are missing fields')
-    axios.post<RespBackend>(`${import.meta.env.VITE_BACKEND_URL}/user/signup`, {
-      Email: info.emaiL,
-      Password: info.password,
-      FirstName: info.firstName,
-      LastName: info.lastName
-    })
-    .then((res) => {
-      if(res.status == 200){
-        console.log('account created!')
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      setError(err.response.data.msg);
-    });
+  const [error, setError] = useState("");
+  function postSignup() {
+    setError("");
+    if (!info.emaiL || !info.password || !info.firstName || !info.lastName)
+      return setError("there are missing fields");
+    axios
+      .post<RespBackend>(`${import.meta.env.VITE_BACKEND_URL}/user/signup`, {
+        Email: info.emaiL,
+        Password: info.password,
+        FirstName: info.firstName,
+        LastName: info.lastName,
+      })
+      .then((res) => {
+        if (res.status == 202 || res.status == 200) {
+          localStorage.token = res.data.token;
+          console.log("account created!");
+          navigate("/dashboard");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err.response.data.msg);
+      });
   }
+  useEffect(() => {
+    async function main(){
+      const token = localStorage.token
+      if(!token) return
+       await getUser(localStorage.token)
+       .then((check_user) => {
+          if(check_user) return navigate('/dashboard') 
+       })   
+    }
+    main()
+}, [])
   return (
     <div className="flex mt-24 justify-center w-full ">
       <div
@@ -86,7 +104,10 @@ export function Signup() {
             </div>
           )}
           <div className="flex flex-col gap-6">
-            <button onClick={postSignup} className="text-white font-medium bg-blue-700 p-2 rounded-md hover:bg-blue-800 transition-all duration-200 focus:ring-blue-500 focus:ring-4 ease-in-out">
+            <button
+              onClick={postSignup}
+              className="text-white font-medium bg-blue-700 p-2 rounded-md hover:bg-blue-800 transition-all duration-200 focus:ring-blue-500 focus:ring-4 ease-in-out"
+            >
               Signup
             </button>
             <p className="text-sm font-ligh text-gray-500 dark:text-gray-400">

@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { RespBackend } from "../../utils/constants";
+import { useNavigate } from "react-router-dom";
+import { getUser } from "../../utils/api";
 
 export function Login() {
+  const navigate = useNavigate();
   const [info, setInfo] = useState({
     emaiL: "",
     password: "",
@@ -21,7 +24,9 @@ export function Login() {
       })
       .then((res) => {
         if (res.status == 200) {
+          localStorage.token = res.data.token;
           console.log("Ok!");
+          navigate("/dashboard");
         }
       })
       .catch((err) => {
@@ -29,6 +34,17 @@ export function Login() {
         setError(err.response.data.msg);
       });
   }
+  useEffect(() => {
+    async function main(){
+        const token = localStorage.token
+        if(!token) return
+         await getUser(localStorage.token)
+         .then((check_user) => {
+            if(check_user) return navigate('/dashboard') 
+         })      
+    }
+    main()
+}, [])
   return (
     <div className="flex mt-24 justify-center w-full">
       <div
